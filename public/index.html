@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>TaskFlow</h2>
+            <p class="sidebar-subtitle">TASK MANAGEMENT</p>
+
+            <nav>
+                <a href="#" class="nav-link active" data-view="dashboard">▦ Dashboard</a>
+                <a href="#" class="nav-link" data-view="all">☷ All Tasks</a>
+                <a href="#" class="nav-link" data-view="pending">◷ Pending</a>
+                <a href="#" class="nav-link" data-view="ongoing">↻ In Progress</a>
+                <a href="#" class="nav-link" data-view="completed">✓ Completed</a>
+                <a href="#" class="nav-link" data-view="history">▤ Task History</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <p>Stay organized.</p>
+                <small>One task at a time!</small>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p>Manage your tasks and stay productive.</p>
+                </div>
+
+                <button class="add-btn" id="openAddModal">+ Add New Task</button>
+            </header>
+
+            <!-- Statistics -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Tasks</p>
+                    <h2 id="totalCount">0</h2>
+                    <span>All your tasks</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Pending</p>
+                    <h2 id="pendingCount">0</h2>
+                    <span>Waiting to start</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>In Progress</p>
+                    <h2 id="ongoingCount">0</h2>
+                    <span>Currently working</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Completed</p>
+                    <h2 id="completedCount">0</h2>
+                    <span>Successfully finished</span>
+                </div>
+            </section>
+
+            <!-- Task Section -->
+            <section class="task-section">
+                <div class="section-heading">
+                    <div>
+                        <h2 id="sectionTitle">All Tasks</h2>
+                        <p id="sectionDescription">View and manage your individual tasks.</p>
+                    </div>
+
+                    <input type="text" id="searchInput" placeholder="Search tasks...">
+                </div>
+
+                <div id="taskList" class="task-list">
+                    <div class="empty-state">
+                        <h3>No tasks available</h3>
+                        <p>Click Add New Task to create your first task.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Add / Edit Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Task</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+
+            <form id="taskForm">
+
+                <label for="taskTitle">Task Name *</label>
+                <input type="text" id="taskTitle" placeholder="Enter task name" required>
+
+                <label for="taskDescription">Description</label>
+                <textarea id="taskDescription" placeholder="Enter task details"></textarea>
+
+                <label for="taskDueDate">Reminder Date and Time</label>
+                <input type="datetime-local" id="taskDueDate">
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" id="cancelModal">Cancel</button>
+                    <button type="submit" class="save-btn">Save Task</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

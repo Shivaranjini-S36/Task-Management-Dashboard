@@ -1,0 +1,20 @@
+
+{
+  "name": "task-management-dashboard",
+  "version": "1.0.0",
+  "description": "Task Management Dashboard using Node.js and MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["task-management", "mongodb", "dashboard"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "mongodb": "^7.7.0"
+  }
+}
