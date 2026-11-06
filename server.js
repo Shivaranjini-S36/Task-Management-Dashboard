@@ -3,11 +3,17 @@ const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 const dotenv = require("dotenv");
 const path = require("path");
+const cors = require("cors");
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors({
+    origin: "https://shivaranjini-s36.github.io"
+}));
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -15,6 +21,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const client = new MongoClient(process.env.MONGODB_URI);
 let tasksCollection;
 
+// Display MongoDB records in terminal
 async function showDatabaseRecords() {
     const tasks = await tasksCollection
         .find({})
@@ -50,7 +57,9 @@ app.get("/api/tasks", async (req, res) => {
         res.json(tasks);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Could not load tasks." });
+        res.status(500).json({
+            message: "Could not load tasks."
+        });
     }
 });
 
@@ -75,6 +84,7 @@ app.post("/api/tasks", async (req, res) => {
         };
 
         const result = await tasksCollection.insertOne(task);
+
         console.log("\nNEW TASK ADDED:", task.title);
 
         await showDatabaseRecords();
@@ -83,9 +93,12 @@ app.post("/api/tasks", async (req, res) => {
             ...task,
             _id: result.insertedId
         });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Could not add task." });
+        res.status(500).json({
+            message: "Could not add task."
+        });
     }
 });
 
@@ -96,7 +109,9 @@ app.put("/api/tasks/:id", async (req, res) => {
         const id = req.params.id;
 
         if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid task ID." });
+            return res.status(400).json({
+                message: "Invalid task ID."
+            });
         }
 
         if (!title || !title.trim()) {
@@ -118,16 +133,24 @@ app.put("/api/tasks/:id", async (req, res) => {
         );
 
         if (result.matchedCount === 0) {
-            return res.status(404).json({ message: "Task not found." });
+            return res.status(404).json({
+                message: "Task not found."
+            });
         }
 
         console.log("\nTASK EDITED:", title);
+
         await showDatabaseRecords();
 
-        res.json({ message: "Task updated successfully." });
+        res.json({
+            message: "Task updated successfully."
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Could not edit task." });
+        res.status(500).json({
+            message: "Could not edit task."
+        });
     }
 });
 
@@ -135,32 +158,53 @@ app.put("/api/tasks/:id", async (req, res) => {
 app.patch("/api/tasks/:id/status", async (req, res) => {
     try {
         const { status } = req.body;
-        const allowedStatuses = ["Pending", "Ongoing", "Completed"];
+        const allowedStatuses = [
+            "Pending",
+            "Ongoing",
+            "Completed"
+        ];
 
         if (!ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ message: "Invalid task ID." });
+            return res.status(400).json({
+                message: "Invalid task ID."
+            });
         }
 
         if (!allowedStatuses.includes(status)) {
-            return res.status(400).json({ message: "Invalid task status." });
+            return res.status(400).json({
+                message: "Invalid task status."
+            });
         }
 
         const result = await tasksCollection.updateOne(
             { _id: new ObjectId(req.params.id) },
-            { $set: { status, updatedAt: new Date() } }
+            {
+                $set: {
+                    status,
+                    updatedAt: new Date()
+                }
+            }
         );
 
         if (result.matchedCount === 0) {
-            return res.status(404).json({ message: "Task not found." });
+            return res.status(404).json({
+                message: "Task not found."
+            });
         }
 
         console.log("\nTASK STATUS CHANGED TO:", status);
+
         await showDatabaseRecords();
 
-        res.json({ message: "Task status updated." });
+        res.json({
+            message: "Task status updated."
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Could not update status." });
+        res.status(500).json({
+            message: "Could not update status."
+        });
     }
 });
 
@@ -168,7 +212,9 @@ app.patch("/api/tasks/:id/status", async (req, res) => {
 app.delete("/api/tasks/:id", async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
-            return res.status(400).json({ message: "Invalid task ID." });
+            return res.status(400).json({
+                message: "Invalid task ID."
+            });
         }
 
         const result = await tasksCollection.deleteOne({
@@ -176,16 +222,24 @@ app.delete("/api/tasks/:id", async (req, res) => {
         });
 
         if (result.deletedCount === 0) {
-            return res.status(404).json({ message: "Task not found." });
+            return res.status(404).json({
+                message: "Task not found."
+            });
         }
 
         console.log("\nTASK DELETED. Updated database records:");
+
         await showDatabaseRecords();
 
-        res.json({ message: "Task deleted successfully." });
+        res.json({
+            message: "Task deleted successfully."
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Could not delete task." });
+        res.status(500).json({
+            message: "Could not delete task."
+        });
     }
 });
 
@@ -193,13 +247,20 @@ app.delete("/api/tasks/:id", async (req, res) => {
 app.get("/api/tasks/database", async (req, res) => {
     try {
         await showDatabaseRecords();
-        res.json({ message: "Records displayed in terminal." });
+
+        res.json({
+            message: "Records displayed in terminal."
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Could not display records." });
+        res.status(500).json({
+            message: "Could not display records."
+        });
     }
 });
 
+// Start server and connect MongoDB
 async function startServer() {
     try {
         if (!process.env.MONGODB_URI) {
@@ -222,9 +283,12 @@ async function startServer() {
                 `Task Management Dashboard running at http://localhost:${PORT}`
             );
         });
+
     } catch (error) {
         console.error("Server startup failed:", error.message);
+
         await client.close().catch(() => {});
+
         process.exit(1);
     }
 }
