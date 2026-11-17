@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow - Task Management Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B5CE6'><rect width='24' height='24' rx='6' fill='%235B5CE6'/><path d='M7 12l3 3 7-7' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <h1 class="brand-title">TaskFlow</h1>
+          <span class="brand-subtitle">TASK MANAGEMENT</span>
+        </div>
+        <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close Sidebar">&times;</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard" id="navDashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+          <span class="nav-label">Dashboard</span>
+        </button>
+
+        <button class="nav-item" data-view="all-tasks" id="navAllTasks">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <circle cx="4" cy="6" r="1.5" fill="currentColor"></circle>
+            <circle cx="4" cy="12" r="1.5" fill="currentColor"></circle>
+            <circle cx="4" cy="18" r="1.5" fill="currentColor"></circle>
+          </svg>
+          <span class="nav-label">All Tasks</span>
+        </button>
+
+        <button class="nav-item" data-view="pending" id="navPending">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span class="nav-label">Pending</span>
+        </button>
+
+        <button class="nav-item" data-view="in-progress" id="navInProgress">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6"></path>
+            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          <span class="nav-label">In Progress</span>
+        </button>
+
+        <button class="nav-item" data-view="completed" id="navCompleted">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+          <span class="nav-label">Completed</span>
+        </button>
+
+        <button class="nav-item" data-view="history" id="navHistory">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 8v4l3 3"></path>
+            <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"></path>
+          </svg>
+          <span class="nav-label">Task History</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Database Status Footer -->
+      <div class="sidebar-footer">
+        <div class="db-status-badge" id="dbStatusBadge" title="Database Connection Status">
+          <span class="status-dot" id="dbStatusDot"></span>
+          <span class="status-text" id="dbStatusText">Checking DB...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Overlay Backdrop -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open Navigation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div>
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <p class="page-subtitle" id="pageSubtitle">Manage your tasks and stay productive.</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button class="btn btn-primary btn-add-task" id="openAddTaskBtn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>+ Add New Task</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Stat Cards Overview (Row of 4 Cards) -->
+      <section class="stats-overview" id="statsSection">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Total Tasks</span>
+          </div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-subtext">All your tasks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Pending</span>
+          </div>
+          <div class="stat-value" id="statPending">0</div>
+          <div class="stat-subtext">Waiting to start</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">In Progress</span>
+          </div>
+          <div class="stat-value" id="statInProgress">0</div>
+          <div class="stat-subtext">Currently working</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Completed</span>
+          </div>
+          <div class="stat-value" id="statCompleted">0</div>
+          <div class="stat-subtext">Successfully finished</div>
+        </div>
+      </section>
+
+      <!-- Section Header with Search -->
+      <section class="section-header" id="sectionHeader">
+        <div class="section-title-wrap">
+          <h2 class="section-title" id="sectionTitle">All Tasks</h2>
+          <p class="section-subtitle" id="sectionSubtitle">View and manage your individual tasks.</p>
+        </div>
+
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search tasks..."
+            autocomplete="off"
+          />
+        </div>
+      </section>
+
+      <!-- Tasks Grid Container -->
+      <section class="tasks-container" id="tasksContainer">
+        <div class="tasks-grid" id="tasksGrid">
+          <!-- Dynamic Task Cards will be inserted here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <div class="empty-icon">📝</div>
+          <h3 class="empty-title">No tasks found</h3>
+          <p class="empty-desc">Create your first task or change your search filter to see tasks here.</p>
+          <button class="btn btn-primary" id="emptyAddTaskBtn">+ Add New Task</button>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState">
+          <div class="spinner"></div>
+          <p>Loading tasks from database...</p>
+        </div>
+      </section>
+
+      <!-- Task History View (Hidden by default, shown when Task History is selected) -->
+      <section class="history-container" id="historyContainer" style="display: none;">
+        <div class="history-card">
+          <div class="history-header">
+            <h3>Recent Activity & Audit Log</h3>
+            <span class="history-tag">Real-time History</span>
+          </div>
+          <div class="history-list" id="historyList">
+            <!-- Dynamic history items -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL 1: Add New Task Modal -->
+  <div class="modal-backdrop" id="addTaskModal" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="addModalTitle">Add New Task</h3>
+        <button class="modal-close-btn" id="closeAddModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <form id="addTaskForm" class="modal-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="taskNameInput">
+            Task Name <span class="required-star">*</span>
+          </label>
+          <input
+            type="text"
+            id="taskNameInput"
+            class="form-input"
+            placeholder="FSWD Lab"
+            required
+            maxlength="150"
+          />
+          <span class="field-error" id="nameError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="taskDescInput">Description</label>
+          <textarea
+            id="taskDescInput"
+            class="form-textarea"
+            rows="3"
+            placeholder="on 26/11/26"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="taskReminderInput">Reminder Date and Time</label>
+          <div class="date-input-wrapper">
+            <input
+              type="datetime-local"
+              id="taskReminderInput"
+              class="form-input date-input"
+            />
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelAddModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveTaskBtn">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Edit Task Modal -->
+  <div class="modal-backdrop" id="editTaskModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="editModalTitle">Edit Task</h3>
+        <button class="modal-close-btn" id="closeEditModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <form id="editTaskForm" class="modal-form" novalidate>
+        <input type="hidden" id="editTaskId" />
+
+        <div class="form-group">
+          <label class="form-label" for="editTaskNameInput">
+            Task Name <span class="required-star">*</span>
+          </label>
+          <input
+            type="text"
+            id="editTaskNameInput"
+            class="form-input"
+            required
+            maxlength="150"
+          />
+          <span class="field-error" id="editNameError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editTaskDescInput">Description</label>
+          <textarea
+            id="editTaskDescInput"
+            class="form-textarea"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editTaskReminderInput">Reminder Date and Time</label>
+          <div class="date-input-wrapper">
+            <input
+              type="datetime-local"
+              id="editTaskReminderInput"
+              class="form-input date-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editTaskStatusInput">Status</label>
+          <select id="editTaskStatusInput" class="form-select">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEditModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="updateTaskBtn">Update Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="deleteConfirmModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-card modal-delete">
+      <div class="modal-header">
+        <h3 class="modal-title" id="deleteModalTitle">Delete Task</h3>
+        <button class="modal-close-btn" id="closeDeleteModalBtn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="delete-warning-text">
+          Are you sure you want to delete <strong id="deleteTaskTargetName">this task</strong>?
+        </p>
+        <p class="delete-subtext">This action cannot be undone and will permanently remove the task from the database.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
