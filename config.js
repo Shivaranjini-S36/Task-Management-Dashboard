@@ -5,8 +5,8 @@
 
 const CONFIG = {
   // Deployed Render backend URL
-  // Update this with your live Render backend URL after deployment
-  RENDER_BACKEND_URL: 'https://task-management-dashboard-backend-w958.onrender.com',
+  // Matches user's Render service
+  RENDER_BACKEND_URL: 'https://task-management-dashboard-j8sy.onrender.com',
 
   // Local development backend URL
   LOCAL_BACKEND_URL: 'http://localhost:5000',
